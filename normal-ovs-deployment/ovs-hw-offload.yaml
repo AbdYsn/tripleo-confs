@@ -1,0 +1,48 @@
+# A Heat environment file that enables OVS Hardware Offload in the overcloud.
+# This works by configuring SR-IOV NIC with switchdev and OVS Hardware Offload on
+# compute nodes. The feature supported in OVS 2.8.0
+
+resource_registry:
+  OS::TripleO::NodeUserData: /usr/share/openstack-tripleo-heat-templates/firstboot/userdata_root_password.yaml
+parameter_defaults:
+  NodeRootPassword: "12345"
+  NUM_OF_VFS: 64
+  BIN_DIR_URL: "http://192.168.24.1/fw/"
+  SRIOV_EN: True
+  LINK_TYPE: "eth"
+  FORCE_UPDATE: True
+  NtpServer: ['0.asia.pool.ntp.org', '1.asia.pool.ntp.org']
+  ESWITCH_IPV4_TTL_MODIFY_ENABLE: False
+#  BondInterfaceOvsOptions: "mode=active-backup miimon=100"
+  KernelArgs: "intel_iommu=on iommu=pt"
+
+  NovaSchedulerDefaultFilters: ['AvailabilityZoneFilter','RamFilter','ComputeFilter','ComputeCapabilitiesFilter','ImagePropertiesFilter','ServerGroupAntiAffinityFilter','ServerGroupAffinityFilter','PciPassthroughFilter']
+  NovaSchedulerAvailableFilters: ["nova.scheduler.filters.all_filters","nova.scheduler.filters.pci_passthrough_filter.PciPassthroughFilter"]
+
+  NeutronTunnelTypes: 'vxlan'
+  NeutronNetworkType:
+    - vxlan
+    - flat
+
+  NeutronBridgeMappings:
+    - datacentre:br-ex
+  NeutronFlatNetworks: datacentre
+
+
+#  NeutronNetworkVLANRanges: 'tenant:70:100'
+#  NeutronFlatNetworks: datacentre,tenant
+#  NeutronBridgeMappings:
+#    - datacentre:br-ex
+#    - tenant:br-tenant
+#  NeutronTunnelTypes: ''
+
+  NovaPCIPassthrough:
+    - devname: "enp3s0f0"
+      physical_network: null
+
+  # Kernel arguments for ComputeSriov node
+  ComputeSriovParameters:
+    TunedProfileName: "throughput-performance"
+    KernelArgs: "intel_iommu=on iommu=pt"
+    OvsHwOffload: True
+

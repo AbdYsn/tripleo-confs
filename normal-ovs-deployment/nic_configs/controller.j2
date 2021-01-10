@@ -1,0 +1,41 @@
+---
+{% set mtu_list = [ctlplane_mtu] %}
+{% for network in role_networks %}
+{{ mtu_list.append(lookup('vars', role_networks_lower[network] ~ '_mtu')) }}
+{%- endfor %}
+{% set min_viable_mtu = mtu_list | max %}
+network_config:
+- type: ovs_bridge
+  name: br-ex
+  use_dhcp: false
+  dns_servers: {{ ctlplane_dns_nameservers }}
+  addresses:
+  - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_subnet_cidr }}
+  routes: {{ ctlplane_host_routes }}
+  members:
+  - type: interface
+    name: enp129s0
+    primary: true
+  - type: vlan
+    vlan_id: {{ internal_api_vlan_id }}
+    addresses:
+    - ip_netmask: {{ internal_api_ip ~ '/' ~ internal_api_cidr }}
+  - type: vlan
+    vlan_id: {{ storage_vlan_id }}
+    addresses:
+    - ip_netmask: {{ storage_ip ~ '/' ~ storage_cidr }}
+
+  - type: vlan
+    vlan_id: {{ external_vlan_id }}
+    addresses:
+    - ip_netmask: {{ external_ip ~ '/' ~ external_cidr }}
+  - type: vlan
+    vlan_id: {{ storage_mgmt_vlan_id }}
+    addresses:
+    - ip_netmask: {{ storage_mgmt_ip ~ '/' ~ storage_mgmt_cidr }}
+
+- type: interface
+  name: enp3s0f0
+  addresses:
+  - ip_netmask: {{ tenant_ip ~ '/' ~ tenant_cidr }}
+

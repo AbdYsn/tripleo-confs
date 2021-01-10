@@ -1,0 +1,4 @@
+parameter_defaults:
+  ControllerNetworkConfigTemplate: '/home/stack/new_ovn/nic_configs/controller.j2'
+  ComputeSriovNetworkConfigTemplate: '/home/stack/new_ovn/nic_configs/compute.j2'
+
