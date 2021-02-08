@@ -1,0 +1,10 @@
+resource_registry:
+  OS::TripleO::ComputeOvsDpdk::Net::SoftwareConfig: ./compute-dpdk.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: ./controller-dpdk.yaml
+
+parameter_defaults:
+    ControlPlaneDefaultRoute: 192.168.24.1
+    ControlPlaneSubnetCidr: '24'
+    DnsServers: ["10.211.0.124", "10.211.0.121", "8.8.8.8"]
+    EC2MetadataIp: 192.168.24.1
+
