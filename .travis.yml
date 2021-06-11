@@ -1,0 +1,28 @@
+language: go
+go:
+  - "1.15"
+env:
+  - IMAGE_NAME=mellanox/network-operator
+
+jobs:
+
+- before_script:
+    - echo "before_script"
+  script:
+    - echo "script"
+
+- before_deploy:
+    - echo "before_deploy"
+  deploy:
+    - skip_cleanup: true
+      script:
+        - echo "deploy master"
+      on:
+        branch: master
+    - skip_cleanup: true
+      script:
+        - echo "deploy tag"
+      on:
+        tags: true
+        all_branches: true
+        condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
