@@ -1,19 +1,21 @@
 language: bash
 jobs:
   include:
-    - stage: build and push
+    - stage: build
       before_script:
       - bash -c "echo before_script"
       script:
       - echo script
       - echo script 2
-      if: tag IS blank
+      if: tag IS blank AND type = pull_request
+    - stage: push image
+      if: type = push
       before_deploy: 
       - echo before_deploy
       deploy: 
       - echo deploy master
       on:
-        branch: master
+        branch: main
       skip_cleanup: true
     - stage: push release to dokcerhub
       if: tag IS present
@@ -21,7 +23,6 @@ jobs:
       - echo before_deploy
       deploy: 
       - echo deploy tag
-      skip_cleanup: true
       on:
         tags: true
       all_branches: true
