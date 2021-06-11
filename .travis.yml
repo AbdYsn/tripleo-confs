@@ -9,14 +9,13 @@ jobs:
       - echo script 2
       if: tag IS blank AND type = pull_request
     - stage: push image
-      if: type = push
+      if: type = push AND branch = main
       before_deploy: 
       - echo before_deploy
       deploy: 
-      - echo deploy master
+      - echo deploy main
       on:
         branch: main
-      skip_cleanup: true
     - stage: push release to dokcerhub
       if: tag IS present
       before_deploy: 
