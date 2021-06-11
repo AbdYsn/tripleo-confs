@@ -11,17 +11,15 @@ jobs:
     - stage: push image
       if: type = push AND branch = main
       before_deploy: 
-      - echo before_deploy
+      - script: before_deploy
       deploy: 
-      - echo deploy main
-      on:
-        branch: main
+      - script: before_deploy
     - stage: push release to dokcerhub
       if: tag IS present
       before_deploy: 
-      - echo before_deploy
+      - script: echo before_deploy
       deploy: 
-      - echo deploy tag
+      - script: echo deploy tag
       on:
         tags: true
       all_branches: true
