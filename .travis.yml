@@ -12,24 +12,20 @@ jobs:
       if: type = push AND branch = main
       before_deploy:
         provider: script
-        script: 
-        - echo before_deploy
+        script: bash ./scripts/run-ci.sh before_deploy
       deploy:
         provider: script 
-        script: 
-        - echo before_deploy
+        script: bash ./scripts/run-ci.sh deploy
         on:
           branch: main
     - stage: push release to dokcerhub
       if: tag IS present
       before_deploy:
         provider: script
-        script: 
-        - echo before_deploy
+        script: bash ./scripts/run-ci.sh before_tag_deploy
       deploy: 
         provider: script
-        script:
-        - echo deploy tag
+        script: bash ./scripts/run-ci.sh tag_deploy
         on:
           tags: true
           all_branches: true
