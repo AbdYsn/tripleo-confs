@@ -10,19 +10,27 @@ jobs:
       if: tag IS blank AND type = pull_request
     - stage: push image
       if: type = push AND branch = main
-      before_deploy: 
-      - script: echo before_deploy
-      deploy: 
-      - script: echo before_deploy
-      on:
-        branch: main
+      before_deploy:
+        provider: script
+        script: 
+        - echo before_deploy
+      deploy:
+        provider: script 
+        script: 
+        - echo before_deploy
+        on:
+          branch: main
     - stage: push release to dokcerhub
       if: tag IS present
-      before_deploy: 
-      - script: echo before_deploy
+      before_deploy:
+        provider: script
+        script: 
+        - echo before_deploy
       deploy: 
-      - script: echo deploy tag
-      on:
-        tags: true
-        all_branches: true
-      condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
+        provider: script
+        script:
+        - echo deploy tag
+        on:
+          tags: true
+          all_branches: true
+        condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
