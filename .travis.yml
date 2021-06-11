@@ -1,28 +1,28 @@
-language: go
-go:
-  - "1.15"
-env:
-  - IMAGE_NAME=mellanox/network-operator
-
+language: bash
 jobs:
-
-- before_script:
-    - echo "before_script"
-  script:
-    - echo "script"
-
-- before_deploy:
-    - echo "before_deploy"
-  deploy:
-    - skip_cleanup: true
+  include:
+    - stage: build and push
+      before_script:
+      - bash -c "echo before_script"
       script:
-        - echo "deploy master"
+      - echo script
+      - echo script 2
+      if: tag IS blank
+      before_deploy: 
+      - echo before_deploy
+      deploy: 
+      - echo deploy master
       on:
         branch: master
-    - skip_cleanup: true
-      script:
-        - echo "deploy tag"
+      skip_cleanup: true
+    - stage: push release to dokcerhub
+      if: tag IS present
+      before_deploy: 
+      - echo before_deploy
+      deploy: 
+      - echo deploy tag
+      skip_cleanup: true
       on:
         tags: true
-        all_branches: true
-        condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
+      all_branches: true
+      condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
